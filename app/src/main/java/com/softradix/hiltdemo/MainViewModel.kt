@@ -1,35 +1,32 @@
 package com.softradix.hiltdemo
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.app.hiltretrofit.api.Countries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
-    private val mListLiveData= MutableLiveData<List<ResponseItem>?>()
+    private var mMutableLiveData = MutableLiveData<Countries>()
+    private val liveData: LiveData<Countries>
+        get() = mMutableLiveData
 
-    fun getListItems() = mListLiveData
+    fun getList() = liveData
+
     init {
-
         loadList()
     }
 
-    private fun loadList() {
-
+    private fun loadList() =
         viewModelScope.launch {
             val getList = repository.getPosts()
-//            TODO: Do EMIT HERE in app using repositories
-//            emit(Resource.loading(null))
-//            try {
-//                emit(Resource.success(apiService.getPosts().response))
-//            } catch (e: Exception) {
-//                emit(Resource.error(null, message = e.message.toString()))
-//            }
+            if(getList.code()==200){
+                mMutableLiveData.postValue(getList.body())
+
+            }
+
         }
-    }
+
 }

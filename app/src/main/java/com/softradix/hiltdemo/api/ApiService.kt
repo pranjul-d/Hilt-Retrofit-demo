@@ -1,9 +1,12 @@
 package com.softradix.hiltdemo.api
 
-import com.softradix.hiltdemo.Response
+import com.app.hiltretrofit.api.Countries
+import com.app.hiltretrofit.main.Country
+import retrofit2.Response
+
 import retrofit2.http.GET
 
 interface ApiService {
-    @GET("posts")
-    suspend fun getPosts(): retrofit2.Response<Response>
+    @GET("region/europe")
+    suspend fun getPosts(): Response<Countries>
 }

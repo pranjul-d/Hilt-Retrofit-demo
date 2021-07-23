@@ -5,26 +5,38 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.app.hiltretrofit.api.Countries
+import com.app.hiltretrofit.api.CountriesItem
+import com.app.hiltretrofit.main.Country
 import com.softradix.hiltdemo.databinding.ListItemsBinding
 import javax.inject.Inject
 
-class RecyclerAdapter @Inject constructor(var mList: ArrayList<ResponseItem>) :
+class RecyclerAdapter @Inject constructor() :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-    class ViewHolder(private val binding: ListItemsBinding) : RecyclerView.ViewHolder(binding.root) {
-       fun bind(mList: ResponseItem){
+    var mList: Countries = Countries()
 
-           binding.textView.text =mList.title
-
-       }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        ListItemsBinding.inflate(LayoutInflater.from(parent.context),
-            parent, false)
+        ListItemsBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent, false
+        )
     )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(mList[position])
+        mList[position].let { holder.bind(it) }
+    }
+    
+    class ViewHolder(private val binding: ListItemsBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(mList: CountriesItem) {
+            binding.apply {
+                mList.also {
+                    textView.text = mList.name
+
+                }
+            }
+        }
     }
 
     override fun getItemCount() = mList.size

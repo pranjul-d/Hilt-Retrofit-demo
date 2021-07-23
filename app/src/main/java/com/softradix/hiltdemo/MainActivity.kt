@@ -2,7 +2,9 @@ package com.softradix.hiltdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.LinearLayout
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.softradix.hiltdemo.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,8 +16,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
 
-    @Inject
-    lateinit var adapter: RecyclerAdapter
+//    @Inject
+//    lateinit var adapter: RecyclerAdapter
+//
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -26,12 +29,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        binding.rv.layoutManager = LinearLayoutManager(this)
-        binding.rv.setHasFixedSize(true)
-        binding.rv.adapter =adapter
+        binding.rv.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            setHasFixedSize(true)
+            adapter = RecyclerAdapter()
+            addItemDecoration(DividerItemDecoration(this@MainActivity, LinearLayout.VERTICAL))
+        }
     }
 
     private fun setupObservers() {
-        TODO("Not yet implemented")
+        mainViewModel.getList().observe(this, {resource->
+            resource?.let {
+
+                        resource.let {response ->
+                        binding.rv.apply {
+                            with(adapter as RecyclerAdapter){
+                                if (response != null) {
+                                    mList = response
+                                }
+                                notifyDataSetChanged()
+                            }
+                        }
+                        }
+            }
+        })
     }
 }

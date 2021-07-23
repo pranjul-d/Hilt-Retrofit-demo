@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
-    private const val BASE_URL = "https://jsonplaceholder.typicode.com/"
+    private const val BASE_URL = "https://restcountries.eu/rest/v2/"
 
     @Singleton
     @Provides
@@ -31,16 +31,15 @@ object ApiModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit
-        .Builder().addConverterFactory(GsonConverterFactory.create())
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .build()
 
     @Singleton
     @Provides
-    fun provideApiService(retrofit: Retrofit): ApiService
-    = retrofit.create(ApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
     @Singleton
     @Provides
