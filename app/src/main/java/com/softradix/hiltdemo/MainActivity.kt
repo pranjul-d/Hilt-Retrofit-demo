@@ -40,13 +40,10 @@ class MainActivity : AppCompatActivity() {
     private fun setupObservers() {
         mainViewModel.getList().observe(this, {resource->
             resource?.let {
-
                         resource.let {response ->
                         binding.rv.apply {
                             with(adapter as RecyclerAdapter){
-                                if (response != null) {
-                                    mList = response
-                                }
+                                mList = response
                                 notifyDataSetChanged()
                             }
                         }

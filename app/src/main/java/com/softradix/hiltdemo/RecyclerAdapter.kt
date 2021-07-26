@@ -33,7 +33,6 @@ class RecyclerAdapter @Inject constructor() :
             binding.apply {
                 mList.also {
                     textView.text = mList.name
-
                 }
             }
         }
